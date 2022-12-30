@@ -10,7 +10,6 @@ const mysql = require('db/mysql');
 const ginfo = require('com/ginfo');
 const redis = require('db/redis');
 
-
 module.exports = async function (input, callback) {
   const ret = {};
   const val = {};
@@ -19,8 +18,8 @@ module.exports = async function (input, callback) {
 
   // main process
   try {
-    const userdb = await mysql.userdb_connect(val);
-    const item_list = await fnItem.get_item_list(userdb, input.aidx);
+    const comdb = await mysql.comdb_connect(val);
+    const item_list = await fnItem.get_item_list(comdb, input.aidx);
 
     // val.log = fnLog.new_log(input.cmd, aidx);
     // val.log.add('login', [login_id]);

@@ -1,7 +1,7 @@
 {
-  "name": "morr_game",
+  "name": "PortPolio_game",
   "version": "1.0.0",
-  "description": "morr_game",
+  "description": "PortPolio_game",
   "main": "game.js",
   "dependencies": {
     "app-module-path": "^2.2.0",

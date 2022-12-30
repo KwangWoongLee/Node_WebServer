@@ -18,8 +18,8 @@ module.exports = async function (input, callback) {
 
   // main process
   try {
-    const userdb = await mysql.userdb_connect(val);
-    let { exp } = await fnItem.get_exp(userdb, input.aidx);
+    const comdb = await mysql.comdb_connect(val);
+    let { exp } = await fnItem.get_exp(comdb, input.aidx);
     if (!exp) exp = 0;
     // val.log = fnLog.new_log(input.cmd, aidx);
     // val.log.add('login', [login_id]);

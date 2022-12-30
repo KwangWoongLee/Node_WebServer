@@ -21,36 +21,28 @@ validator.check = (obj, name) => {
   return ret;
 };
 // body
-validator.login = {
-  type: 'object',
-  properties: {
-    os_type: { type: 'intiger', minimum: ginfo.os_type.android, maximum: ginfo.os_type.ios },
-    login_id: { type: 'string', minLength: 1, maxLength: 255 },
-    uuid: { type: 'string', minLength: 1, maxLength: 255 },
-    login_type: { type: 'integer', minimum: ginfo.login_type.guest, maximum: ginfo.login_type.max },
-  },
-  required: ['os_type', 'login_id', 'uuid', 'login_type'],
-};
-
-validator.agreement = {
-  type: 'object',
-  properties: {
-    aidx: { type: 'intiger', minimum: 1 },
-    session: { type: 'string', minLength: 8, maxLength: 10 },
-    type: { type: 'integer', minimum: 1, maximum: 2 },
-  },
-  required: ['aidx', 'session', 'type'],
-};
 
 validator.reg_id = {
   type: 'object',
   properties: {
     login_id: { type: 'string', minLength: 1, maxLength: 255 },
-    uuid: { type: 'string', minLength: 1, maxLength: 255 },
-    login_type: { type: 'integer', minimum: ginfo.login_type.guest, maximum: ginfo.login_type.max },
-    name: { type: 'string', minLength: 0, maxLength: 50 },
+    login_type: { type: 'intiger', minimum: 0 },
+    password: { type: 'string', minLength: 1, maxLength: 255 },
+    name: { type: 'string', minLength: 1, maxLength: 45 },
+    nickname: { type: 'string', minLength: 1, maxLength: 45 },
   },
-  required: ['login_id', 'uuid', 'login_type', 'name'],
+  required: ['login_id', 'login_type', 'password', 'name', 'nickname'],
+};
+
+validator.login = {
+  type: 'object',
+  properties: {
+    server_version: { type: 'string', minLength: 1, maxLength: 255 },
+    login_id: { type: 'string', minLength: 1, maxLength: 255 },
+    login_type: { type: 'intiger', minimum: 0 },
+    password: { type: 'string', minLength: 1, maxLength: 255 },
+  },
+  required: ['server_version', 'login_id', 'login_type', 'password'],
 };
 
 validator.item_list = {

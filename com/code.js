@@ -38,12 +38,12 @@ code.error.version = -201; // 로그인 버전이 틀립니다. : 다운로드 �
 code.error.server_inspect = -202; // 서버 점검중 입니다.
 code.error.server_regid_block = -204; // 서버에 계정생성이 잠겨 있습니다.
 
-code.error.not_found_id = -1023; // 계정정보를 찾을수 없습니다.
-code.error.regid_overlap_id = -1024; // 계정 생성시 아이디 중복
-code.error.regid_overlap_name = -1025; // 계정 생성시 네임 중복
-code.error.overlap_link_id = -1026; // 이미 연동된 sns id
-
-code.error.block_user = -1030; // 블럭된 유저입니다.
+code.error.login_type = 1001; // 로그인
+code.error.not_found_id = -1002; // 계정정보를 찾을수 없습니다.
+code.error.regid_overlap_id = -1003; // 계정 생성시 아이디 중복
+code.error.regid_overlap_name = -1004; // 계정 생성시 네임 중복
+code.error.overlap_link_id = -1005; // 이미 연동된 sns id
+code.error.block_user = -1006; // 블럭된 유저입니다.
 
 code.error.not_found_item_list = -1031; // 아이템이 존재하지 않습니다.
 code.error.not_found_unit_list = -1032; // 유닛이 존재하지 않습니다.

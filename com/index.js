@@ -268,7 +268,7 @@ exports.packet_end = function (ret, val, err, callback) {
     else {
       if (err.stack && !err.sqlMessage) {
         err = err.stack;
-        this.TelegramMessage('morr game critical error : cmd : ' + val.input.cmd + '(err:' + err + ')');
+        this.TelegramMessage('PortPolio game critical error : cmd : ' + val.input.cmd + '(err:' + err + ')');
       }
       logger.error('error cmd : ', val.input.cmd, ' , err: ', err);
       ret.data = {};

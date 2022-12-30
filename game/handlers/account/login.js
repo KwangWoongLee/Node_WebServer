@@ -19,15 +19,14 @@ module.exports = async function (input, callback) {
   // main process
   try {
     const comdb = await mysql.comdb_connect(val);
-    let login_id = '';
-    if (input.login_type == ginfo.login_type.guest) {
-      login_id = 'gst_'.concat(input.login_id);
-    } else throw error.login_type;
+    let login_id = input.login_id;
 
     let user_info = await fnUser.get_userinfo(comdb, login_id);
-    const server_info = await fnUser.get_server_info(comdb, input.version);
+    if (!user_info) throw error.not_found_id;
 
-    if (server_info.version != input.version) throw error.version;
+    const server_info = await fnUser.get_server_info(comdb, input.server_version);
+
+    if (server_info.version != input.server_version) throw error.version;
     if (server_info.status != ginfo.server_status.on) throw error.server_inspect;
 
     val.session_value = {};

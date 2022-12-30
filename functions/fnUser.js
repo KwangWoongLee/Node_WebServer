@@ -11,11 +11,11 @@ const { login } = require('server/validator');
 const { result } = require('lodash');
 
 // ------- 계정 생성전 체크 --------- //
-exports.check_user_overlap = function (comdb, login_id) {
+exports.check_user_overlap = function (comdb, id) {
   return new Promise(function (resolve, reject) {
-    const query = 'select idx from dat_account where login_id = ?;';
+    const query = 'select idx from dat_account where id = ?;';
     mysql
-      .query(comdb, query, [login_id])
+      .query(comdb, query, [id])
       .then((results) => {
         return results.length == 0 ? resolve() : reject(error.regid_overlap_id);
       })
@@ -24,7 +24,7 @@ exports.check_user_overlap = function (comdb, login_id) {
 };
 
 // ------- 계정 생성 --------- //
-exports.insert_comdb = async function (comdb, name, login_id) {
+exports.insert_comdb = async function (comdb, id, password, name, nickname) {
   const aidx = await reg_account();
 
   return { aidx };
@@ -32,11 +32,8 @@ exports.insert_comdb = async function (comdb, name, login_id) {
   function reg_account() {
     return new Promise(function (resolve, reject) {
       const query = com.make_query(
-        [
-          `insert into dat_account (idx, name, login_id, login_type, uuid, agreement, service_term, login_dt, reg_dt) `,
-          `values (null, ?, ?, 0, '', 0, 0, now(), now());`,
-        ],
-        [name, login_id]
+        [`insert into dat_account (idx, id, password, name, nickname, reg_date) `, `values (null, ?, ?, ?, ?, now());`],
+        [id, password, name, nickname]
       );
 
       mysql
@@ -63,18 +60,17 @@ exports.insert_userdb = async function (userdb, aidx) {
       item_values.push(sprintf('(null,%d,%d,%d)', aidx, code, cnt));
     }
 
-    const item_query = `insert into dat_item(idx, aidx, item_code, cnt) values ${_.join(item_values, ',')};`;
+    const item_query = `insert into dat_item(idx, aidx, item_code, item_cnt) values ${_.join(item_values, ',')};`;
     if (item_values.length >= 1) await mysql.query(userdb, item_query, []);
   }
 };
 
-exports.get_userinfo = function (comdb, login_id) {
+exports.get_userinfo = function (comdb, id) {
   return new Promise(function (resolve, reject) {
-    const query =
-      'select idx as aidx, name, login_id, login_type, uuid, agreement, service_term from dat_account where login_id = ?';
+    const query = 'select idx as aidx, name, id from dat_account where id = ?';
 
     mysql
-      .query(comdb, query, [login_id])
+      .query(comdb, query, [id])
       .then((results) => (results.length ? resolve(results[0]) : reject(error.not_found_id)))
       .catch((e) => reject(e));
   });
@@ -82,20 +78,10 @@ exports.get_userinfo = function (comdb, login_id) {
 
 exports.get_server_info = function (comdb, version) {
   return new Promise(function (resolve, reject) {
-    const query = 'select version, status, agreement, service_term from _server_info where version = ?;';
+    const query = 'select version, status from _server_info where version = ?;';
     mysql
       .query(comdb, query, [version])
       .then((results) => (results.length ? resolve(results[0]) : reject(error.version)))
       .catch((e) => reject(e));
   });
-};
-
-exports.set_agreement = function (comdb, aidx, type) {
-  let column;
-  if (type == 1) column = 'agreement';
-  else if (type == 2) column = 'service_term';
-
-  const query = `update dat_account set ${column} = 1 where idx = ?;`;
-
-  return mysql.query(comdb, query, [aidx]);
 };

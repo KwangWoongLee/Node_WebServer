@@ -22,6 +22,7 @@ const conf = require('game/config');
 const redis = require('db/redis');
 const mysql = require('db/mysql');
 const Server = require('server');
+const GRPC_Client = require('grpc');
 const fnLog = require('functions/fnLog');
 const fs = require('fs');
 const path = require('path');
@@ -49,7 +50,8 @@ process.on('uncaughtException', (err) => {
     err = err.stack;
   }
   logger.error(err);
-  com.TelegramMessage(`morr game uncaughtException : ${err}`);
+
+  com.TelegramMessage(`PortPolio game uncaughtException : ${err}`);
 });
 
 // ------ server start ----------
@@ -72,8 +74,10 @@ process.on('uncaughtException', (err) => {
     });
 
     await start_server();
+    await start_grpc();
   } catch (err) {
-    const errmsg = '>>>>>>>>>>>>>>> fail to start morr game server(port = ' + conf.server.port + ', err = ' + err + ')';
+    const errmsg =
+      '>>>>>>>>>>>>>>> fail to start PortPolio game server(port = ' + conf.server.port + ', err = ' + err + ')';
     logger.error(errmsg);
   }
 })();
@@ -85,7 +89,32 @@ function start_server() {
       if (err) {
         reject(err);
       } else {
-        const successmsg = 'try to start [morr game server] : http://' + conf.server.domain + ':' + conf.server.port;
+        const successmsg =
+          'try to start [PortPolio game server] : http://' + conf.server.domain + ':' + conf.server.port;
+        logger.info(successmsg);
+        resolve();
+        stat.report_write('game');
+        fnLog.log_insert_timer_run();
+
+        if (conf.test_mode) {
+          for (const senario of conf.test_mode.senarios) {
+            require(`test_logic/${senario}`).run();
+          }
+        }
+      }
+    });
+  });
+}
+
+function start_grpc() {
+  return new Promise(function (resolve, reject) {
+    const svr = new GRPC_Client(conf.grpc_client.port, router);
+    svr.doStart(function (err) {
+      if (err) {
+        reject(err);
+      } else {
+        const successmsg =
+          'try to start [PortPolio game grpc client] : http://' + conf.grpc_client.domain + ':' + conf.grpc_client.port;
         logger.info(successmsg);
         resolve();
         stat.report_write('game');

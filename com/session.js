@@ -16,7 +16,7 @@ const generate = function () {
 
 exports.init = function (user_info) {
   return new Promise((resolve, reject) => {
-    const session_key = com.make_redis_Key('morr', 'session', user_info.aidx);
+    const session_key = com.make_redis_Key('PortPolio', 'session', user_info.aidx);
     user_info.session = generate();
 
     const values = [session_key, 'session', user_info.session, 'user', JSON.stringify(user_info)];
@@ -31,7 +31,7 @@ exports.init = function (user_info) {
 };
 
 exports.set = async function (val) {
-  let key = com.make_redis_Key('morr', 'session', val.aidx);
+  let key = com.make_redis_Key('PortPolio', 'session', val.aidx);
 
   let values = [];
 
@@ -55,7 +55,7 @@ exports.get = function (val, all = true) {
   if (!val.session_value) val.session_value = {};
   val.cache_all = all;
 
-  const key = com.make_redis_Key('morr', 'session', val.aidx);
+  const key = com.make_redis_Key('PortPolio', 'session', val.aidx);
 
   const rc = {
     cmd: 'hmget',
@@ -82,7 +82,7 @@ exports.get = function (val, all = true) {
 };
 
 exports.check = async function (val, all = true) {
-  const key = com.make_redis_Key('morr', 'session', val.aidx);
+  const key = com.make_redis_Key('PortPolio', 'session', val.aidx);
   const session = val.session;
   const session_value = await this.get(val, all);
 
@@ -97,13 +97,13 @@ exports.check = async function (val, all = true) {
 };
 
 exports.release = function (aidx) {
-  const key = com.make_redis_Key('morr', 'session', aidx);
+  const key = com.make_redis_Key('PortPolio', 'session', aidx);
   redis.main.command('expire', [key, 2]);
 };
 
 exports.exists = function (val) {
   return new Promise((resolve, reject) => {
-    const key = com.make_redis_Key('morr', 'session', val.aidx);
+    const key = com.make_redis_Key('PortPolio', 'session', val.aidx);
     redis.main
       .command('hget', [key, 'session'])
       .then((session) => {

@@ -23,7 +23,8 @@ info.market_type = {
 
 info.login_type = {
   guest: 0,
-  max: 1,
+  normal: 1,
+  max: 2,
 };
 // user define
 info.user = {};
@@ -43,6 +44,6 @@ info.reward_type = {
   random: 2, // 랜덤 지급
 };
 
-info.exp_code = 40010;
+info.exp_code = 0;
 
 module.exports = info;
