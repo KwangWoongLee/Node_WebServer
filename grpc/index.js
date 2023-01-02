@@ -1,63 +1,50 @@
 'use strict';
 
 const logger = require('com/log');
+const match_service = require('grpc/client');
 
 module.exports = class GRPC_Client {
-  constructor(port, router, get_router) {
+  constructor(port) {
     if (!port) {
       throw new Error('포트 값을 지정해주세요.');
     }
-
-    this.router = router;
-    this.port = port;
-    this.http = undefined;
-    this.get_router = get_router;
   }
 
   doStart(callback) {
     const self = this;
 
-    const onRequest = (req, res) => {
-      const { headers, method, url } = req;
-      const client_ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress;
+    // const serverInfo = {
+    //   host: 'localhost',
+    //   port: 5002,
+    //   region: 'kor',
+    // };
+    // match_service.AddServer(serverInfo, (error, empty) => {
+    //   if (error) {
+    //     console.log(error);
+    //   } else {
+    //     console.log(empty);
+    //   }
+    // });
 
-      let data = '';
-      req.on('data', (chunk) => {
-        data += chunk;
-      });
-      req.on('end', () => {
-        if (this.get_router && method == 'GET') {
-          this.get_router(req, res);
-        } else {
-          this.router.doRoute(data, res, client_ip);
-        }
-      });
+    const createRoomInfo = {
+      user: {
+        region: 'kor',
+      },
+      name: 'myRoom',
+      mapId: 1,
+      minMemberCount: 1,
+      maxMemberCount: 5,
     };
-
-    const svr = http.createServer(onRequest);
-    svr.on('error', (err) => {
-      if (err) {
-        logger.error(err);
-      }
-      callback(err);
-    });
-
-    svr.on('connection', (socket) => {
-      if (socket) {
-        socket.setNoDelay();
+    match_service.CreateRoom(createRoomInfo, (error, user) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log(user);
       }
     });
 
-    svr.listen(this.port, '0.0.0.0', () => {
-      logger.info('서버가 시작되었습니다. [port:' + self.port + ']');
-      this.http = svr;
-      callback(null, this.port);
-    });
+    callback(null, this.port);
   }
 
-  doClose() {
-    if (this.http) {
-      this.http.close();
-    }
-  }
+  doClose() {}
 };

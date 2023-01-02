@@ -35,7 +35,9 @@
     "sprintf-js": "^1.0.3",
     "step": "^0.0.5",
     "underscore": "^1.13.1",
-    "winston": "^0.7.2"
+    "winston": "^0.7.2",
+    "@grpc/grpc-js": "^1.8.0",
+    "@grpc/proto-loader": "^0.7.4"
   },
   "devDependencies": {},
   "scripts": {

@@ -96,11 +96,11 @@ function start_server() {
         stat.report_write('game');
         fnLog.log_insert_timer_run();
 
-        if (conf.test_mode) {
-          for (const senario of conf.test_mode.senarios) {
-            require(`test_logic/${senario}`).run();
-          }
-        }
+        // if (conf.test_mode) {
+        //   for (const senario of conf.test_mode.senarios) {
+        //     require(`test_logic/${senario}`).run();
+        //   }
+        // }
       }
     });
   });
@@ -108,8 +108,8 @@ function start_server() {
 
 function start_grpc() {
   return new Promise(function (resolve, reject) {
-    const svr = new GRPC_Client(conf.grpc_client.port, router);
-    svr.doStart(function (err) {
+    const grpc_client = new GRPC_Client(conf.grpc_client.port);
+    grpc_client.doStart(function (err) {
       if (err) {
         reject(err);
       } else {
@@ -117,14 +117,8 @@ function start_grpc() {
           'try to start [PortPolio game grpc client] : http://' + conf.grpc_client.domain + ':' + conf.grpc_client.port;
         logger.info(successmsg);
         resolve();
-        stat.report_write('game');
+        // stat.report_write('grpc');
         fnLog.log_insert_timer_run();
-
-        if (conf.test_mode) {
-          for (const senario of conf.test_mode.senarios) {
-            require(`test_logic/${senario}`).run();
-          }
-        }
       }
     });
   });

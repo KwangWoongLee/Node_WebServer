@@ -4,8 +4,8 @@
     "domain": "127.0.0.1"
   },
   "grpc_client": {
-    "port": 8081,
-    "domain": "127.0.0.1"
+    "port": 5001,
+    "domain": "localhost"
   },
   "login_secret": "Ga9lsf6bxpX0lfju9ua7ShLilPAhwTG9LCcXC1iy",
   "jwt": {
